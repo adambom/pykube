@@ -346,6 +346,13 @@ class Pod(NamespacedAPIObject):
 
 
 class ReplicationController(NamespacedAPIObject, ReplicatedMixin, ScalableMixin):
+    
+    @property
+    def ready(self):
+        return (
+            self.obj['status']['observedGeneration'] >= self.obj['metadata']['generation'] and
+            self.obj['status']['readyReplicas'] == self.replicas
+        )
 
     version = "v1"
     endpoint = "replicationcontrollers"
